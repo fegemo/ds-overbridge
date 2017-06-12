@@ -1,0 +1,28 @@
+{
+  "name": "sw-galaxy-viz",
+  "version": "1.0.0",
+  "description": "A visualization of the death star's command control",
+  "browser": "assets/js/main.js",
+  "scripts": {
+    "prepare": "npm install -g postcss-cli postcss-cssnext livereload",
+    "css": "postcss --use postcss-cssnext --dir assets/css/ assets/css/src/*.css",
+    "build": "npm run css",
+    "dev": "postcss --use postcss-cssnext --dir assets/css/ assets/css/src/*.css -w"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/fegemo/sw-galaxy-viz.git"
+  },
+  "keywords": [
+    "visualization",
+    "star",
+    "wars",
+    "d3.js"
+  ],
+  "author": "Flávio Coutinho",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/fegemo/sw-galaxy-viz/issues"
+  },
+  "homepage": "https://github.com/fegemo/sw-galaxy-viz#readme"
+}
