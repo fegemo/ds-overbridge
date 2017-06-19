@@ -61,11 +61,11 @@ function map() {
         let layerGroup = svg.append('g')
           .classed(`map-layer layer-${layer.name}`, true);
 
-          layerGroup = layerGroup
+          let enterPath = layerGroup
             .selectAll('path')
             .data(layer.features)
             .enter()
-            .append('path')
+          layerGroup = enterPath.append('path')
             .attr('d', path)
             .classed(layer.itemClasses, true);
 
@@ -77,6 +77,13 @@ function map() {
           }
           if (layer.strokeWidth) {
             layerGroup = layerGroup.style('stroke-width', layer.strokeWidth);
+          }
+          if (layer.label) {
+            enterPath.append('text')
+              .text(layer.label)
+              .classed('planet-name', true)
+              .attr('x', p => projection(p.geometry.coordinates)[0])
+              .attr('y', p => projection(p.geometry.coordinates)[1] + 15);
           }
       });
 
@@ -166,8 +173,6 @@ d3.queue()
         {
           name: 'planets',
           features: planets.features
-            // gets only canonical planets (not from the extented universe)
-            .filter(p => p.properties.canon)
             // gets only planets for which we have info from movies (planetInfo)
             .filter(p => {
               let planetName = (p.properties.name || p.properties.name_web
@@ -184,7 +189,8 @@ d3.queue()
                 pi => pi.name.toLowerCase() === planetName)
               return Object.assign(p, { movie: fromMovie });
             }),
-          itemClasses: ['planet']
+          itemClasses: ['planet'],
+          label: p => p.movie.name
         },
         {
           name: 'region',
