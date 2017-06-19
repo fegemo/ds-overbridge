@@ -143,7 +143,8 @@ d3.queue()
   .defer(d3.json, 'data/planets.geojson')
   .defer(d3.json, 'data/region.geojson')
   .defer(d3.json, 'data/sector.geojson')
-  .await((err, grid, hyperspace, planets, region, sector) => {
+  .defer(d3.json, 'data/planets.json')
+  .await((err, grid, hyperspace, planets, region, sector, planetsInfo) => {
     let mapEl = d3.select('#map');
 
     let galaxyMap = map()
@@ -164,7 +165,25 @@ d3.queue()
         },
         {
           name: 'planets',
-          features: planets.features.filter(p => p.properties.canon),
+          features: planets.features
+            // gets only canonical planets (not from the extented universe)
+            .filter(p => p.properties.canon)
+            // gets only planets for which we have info from movies (planetInfo)
+            .filter(p => {
+              let planetName = (p.properties.name || p.properties.name_web
+                || '').toLowerCase();
+              let planetsWithInfo = planetsInfo.map(
+                pi => pi.name.toLowerCase())
+              return planetsWithInfo.indexOf(planetName) !== -1;
+            })
+            // joins with data from the movies
+            .map(p => {
+              let planetName = (p.properties.name || p.properties.name_web
+                || '').toLowerCase();
+              let fromMovie = planetsInfo.find(
+                pi => pi.name.toLowerCase() === planetName)
+              return Object.assign(p, { movie: fromMovie });
+            }),
           itemClasses: ['planet']
         },
         {
