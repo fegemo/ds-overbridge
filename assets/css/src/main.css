@@ -40,3 +40,22 @@ body {
 .layer-region {
   opacity: 0.1;
 }
+
+.layer-grid {
+  opacity: 0.2;
+}
+
+.layer-planets {
+}
+
+.planet {
+  stroke: #7056ff;
+  stroke-width: 2;
+  fill: transparent;
+  transform-origin: center;
+  transform: scale(0.75);
+
+  &.picked {
+    stroke: #ff1309;
+  }
+}

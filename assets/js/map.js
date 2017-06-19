@@ -45,33 +45,77 @@ function map() {
 
       let path = d3.geoPath().projection(projection);
 
+      // zooming and panning
       let zoom = d3.zoom()
         .scaleExtent([1,8])
-        .on('zoom', zoomed);
+        .on('zoom', () => {
+          svg.selectAll('g').attr('transform', d3.event.transform);
+        });
 
-      svg.call(zoom);
+        svg.call(zoom);
 
+
+      // loads the geometry
       ['region', 'grid', /*'hyperspace',*/ 'sector', 'planets'].forEach(layerName => {
         layer = geography.find(l => l.name === layerName);
         let layerGroup = svg.append('g')
           .classed(`map-layer layer-${layer.name}`, true);
 
-          layerGroup
+          layerGroup = layerGroup
             .selectAll('path')
             .data(layer.features)
             .enter()
             .append('path')
             .attr('d', path)
-            .style('fill', d => layer.fillFunction ? layer.fillFunction(d) : layer.fill)
-            .style('stroke', layer.stroke)
-            .style('stroke-width', layer.strokeWidth)
+            .classed(layer.itemClasses, true);
+
+          if (layer.fillFunction || layer.fill) {
+            layerGroup = layerGroup.style('fill', layer.fill);
+          }
+          if (layer.stroke) {
+            layerGroup = layerGroup.style('stroke', layer.stroke);
+          }
+          if (layer.strokeWidth) {
+            layerGroup = layerGroup.style('stroke-width', layer.strokeWidth);
+          }
       });
 
 
 
-      function zoomed(e) {
-        svg.selectAll('g').attr('transform', d3.event.transform);
-      }
+      // adds brushing (selecting rectangularly) to the planets
+      let brush = d3.brush()
+        .extent([[0, 0], [width, height]])
+        .on('brush', () => {
+          // if this is a zooming event, ignore it and return
+          if (d3.event.sourceEvent && d3.event.sourceEvent.type === 'zoom') {
+            return;
+          }
+
+          let region = d3.event.selection;
+          let brushX1 = region[0][0],
+            brushY1 = region[0][1],
+            brushX2 = region[1][0],
+            brushY2 = region[1][1];
+
+          svg.selectAll('.layer-planets path').classed('picked', d => {
+            let projectedPlanetPosition = projection(d.geometry.coordinates);
+            let planetX = projectedPlanetPosition[0],
+              planetY = projectedPlanetPosition[1];
+
+            return (brushX1 <= planetX && planetX <= brushX2)
+                && (brushY1 <= planetY && planetY <= brushY2);
+          });
+        })
+        .on('end', () => {
+          if (!d3.event.selection) {
+            svg.selectAll('.layer-planets path.picked').classed('picked', false);
+          }
+        });
+
+      svg.append('g')
+        .classed('brush', true)
+        .call(brush);
+
 
     });
   }
@@ -110,16 +154,14 @@ d3.queue()
         {
           name: 'planets',
           features: planets.features.filter(p => p.properties.canon),
-          stroke: 'transparent',
-          strokeWidth: 0,
-          fill: 'orange'
+          itemClasses: ['planet']
         },
         {
           name: 'region',
           features: region.features,
           stroke: '#444',
           strokeWidth: 1,
-          fillFunction: (d, i) => d3.scaleLinear()
+          fill: (d, i) => d3.scaleLinear()
             .domain([
               Math.min(...region.features.map(r => r.properties.rid)),
               Math.max(...region.features.map(r => r.properties.rid))])
