@@ -69,7 +69,7 @@ function map() {
             .attr('d', path)
             .classed(layer.itemClasses, true);
 
-          if (layer.fillFunction || layer.fill) {
+          if (layer.fill) {
             layerGroup = layerGroup.style('fill', layer.fill);
           }
           if (layer.stroke) {
