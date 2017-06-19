@@ -116,6 +116,17 @@ function map() {
         .classed('brush', true)
         .call(brush);
 
+      // adds control to allow panning when 'shift' is pressed
+      'keydown keyup'.split(' ').forEach(
+        name => document.body.addEventListener(name, (e) => {
+          if (e.key.toLowerCase() === 'shift') {
+            // adds a .deactivated to the brush overlay to make it
+            // pointer-events: none
+            svg.select('.brush .overlay')
+              .classed('deactivated', e.type === 'keydown');
+          }
+        })
+      );
 
     });
   }

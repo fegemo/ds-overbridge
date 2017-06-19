@@ -21,9 +21,10 @@ body {
 
 #map {
   @apply --cover-page;
-  z-index: 2;
+  z-index: 20;
   width: 100%;
   height: 100%;
+  cursor: move;
 }
 
 #starfield {
@@ -58,4 +59,8 @@ body {
   &.picked {
     stroke: #ff1309;
   }
+}
+
+.overlay.deactivated {
+  pointer-events: none;
 }
