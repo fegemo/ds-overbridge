@@ -218,4 +218,27 @@ d3.queue()
     d3.select('#map')
       .call(galaxyMap);
 
+
+
+    let donut = donutChart()
+      .width(300)
+      .height(150)
+      .cornerRadius(3) // sets how rounded the corners are on each slice
+      .padAngle(0.015) // effectively dictates the gap between slices
+      .variable('frequency')
+      .category('climate');
+
+    let allClimates = [].concat(...planetsInfo.map(p => p.climate.split(', ')));
+    let climatesFrequency = new Map([...new Set(allClimates)].map(
+      x => [x, allClimates.filter(y => y === x).length]
+    ));
+    climatesFrequency = Array.from(climatesFrequency.entries())
+      .map(([key, value]) => ({ climate: key, frequency: value}))
+    let maximumClimateFrequency = Math.max(...climatesFrequency.map(c => c.frequency));
+    climatesFrequency.forEach(c => c.frequency /= maximumClimateFrequency);
+
+    d3.select('#planets')
+      .datum(climatesFrequency)
+      .call(donut);
+
 });
