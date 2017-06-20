@@ -237,7 +237,7 @@ d3.queue()
     let maximumClimateFrequency = Math.max(...climatesFrequency.map(c => c.frequency));
     climatesFrequency.forEach(c => c.frequency /= maximumClimateFrequency);
 
-    d3.select('#planets')
+    d3.select('#planets .chart')
       .datum(climatesFrequency)
       .call(donut);
 

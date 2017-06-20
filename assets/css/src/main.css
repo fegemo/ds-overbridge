@@ -105,6 +105,16 @@ body {
   }
 }
 
+.hud {
+  & h1 {
+    font-family: monospace;
+    padding: 0.15em;
+    margin: 0 0 0.5em;
+    border-bottom: 1px solid #555;
+    font-weight: normal;
+  }
+}
+
 .hud-on-left {
   transform: rotateY(30deg);
   transform-origin: left;
