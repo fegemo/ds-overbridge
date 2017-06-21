@@ -151,7 +151,9 @@ d3.queue()
   .defer(d3.json, 'data/region.geojson')
   .defer(d3.json, 'data/sector.geojson')
   .defer(d3.json, 'data/planets.json')
-  .await((err, grid, hyperspace, planets, region, sector, planetsInfo) => {
+  .defer(d3.json, 'data/people.json')
+  .defer(d3.json, 'data/species.json')
+  .await((err, grid, hyperspace, planets, region, sector, planetsInfo, peopleInfo, speciesInfo) => {
     let mapEl = d3.select('#map');
 
     let galaxyMap = map()
@@ -257,6 +259,106 @@ d3.queue()
       .call(donut.category('terrain'));
 
 
+    // planeta tem alguns residentes notáveis
+    // residente têm uma espécie
+    // espécie tem uma língua
+    // contar: (1) a quantidade residentes notáveis que falam uma língua ou
+    //  (2) a população de cada planeta * línguas faladas
+
+    // tag cloud (worlde-like) of languages
+    // uniquePeopleURLsInPlanets = ['http://swapi.co/people/1', '...', ...];
+    let uniquePeopleURLsInPlanets = new Set([].concat(...planetsInfo.map(pi => pi.residents)));
+    // uniquePeopleInPlanets = [{ name: 'Luke Skywalker', ... }, {...}, ...];
+    let uniquePeopleInPlanets = [...uniquePeopleURLsInPlanets].map(pu => peopleInfo.find(pi => pu === pi.url));
+    // speciesURLsOfPeople = ['http://swapi.co/species/1', '...', ...];
+    let speciesURLsOfPeople = [].concat(...uniquePeopleInPlanets.map(p => p.species));
+    // speciesOfPeople = [{name: 'Human', language: 'Galactic Basic' ...}, ...];
+    let speciesOfPeople = speciesURLsOfPeople.map(su => speciesInfo.find(s => su === s.url));
+    // languagesOfSpecies = ['galactic basic', 'mon calamarian', ...];
+    let languagesOfSpecies = speciesOfPeople.map(s => s.language.toLowerCase());
+    // languagesFrequency = { 'galactic basic': 37, 'mon calamarian': 1 ...};
+    let languagesFrequency = languagesOfSpecies.reduce((frequency, l) => {
+      frequency[l] = (frequency[l] + 1) || 1;
+      return frequency;
+    }, {});
+
+
+    let planetsWithLanguages = planetsInfo.map(pi => {
+      return {
+        planet: pi.name,
+        population: pi.population,
+        languages: [...new Set([].concat(...pi.residents.map(rURL => {
+          return [].concat(peopleInfo.find(pei => pei.url === rURL).species.map(sURL => {
+            return speciesInfo.find(s => s.url === sURL).language.toLowerCase()
+          }));
+        })))]
+      };
+    });
+
+    // PAREI AQUI!!
+    languagesFrequency = [...new Set([].concat(...planetsWithLanguages.map(pwl => pwl.languages)))].reduce((frequency, l) => {
+      frequency[l] = planetsWithLanguages.filter(pwl => pwl.languages.indexOf(l) !== -1).reduce((count, pi) => count + (Number.isInteger(parseInt(pi.population)) ? parseInt(pi.population) : 1), 0);
+      return frequency;
+    }, {});
+    // languagesFrequency = planetsWithLanguages.reduce((frequency, pwl) => {
+    //   frequency[pwl.language] = frequency[pwl.language]+1
+    //   return frequency;
+    // }, {});
+
+    debugger;
+    drawWordCloud();
+
+    function drawWordCloud(){
+      word_count = languagesFrequency;
+
+
+
+        var svg_location = "#languages .chart";
+        var width = 205;
+        var height = 205;
+
+        var fill = d3.scaleOrdinal(d3.schemeCategory20);
+
+        var word_entries = d3.entries(word_count);
+
+        var xScale = d3.scaleLinear()
+           .domain([0, d3.max(word_entries, function(d) {
+              return d.value;
+            })
+           ])
+           .range([8,24]);
+
+        d3.layout.cloud().size([width, height])
+          .timeInterval(20)
+          .words(word_entries)
+          .fontSize(d => xScale(+d.value))
+          .text(d => d.key)
+          .rotate(() => ~~(Math.random() * 2) * 90)
+          .font('Arial, OpenSans, sans-serif')
+          .on('end', draw)
+          .start();
+
+        function draw(words) {
+          d3.select(svg_location).append("svg")
+              .attr("width", width)
+              .attr("height", height)
+            .append("g")
+              .attr("transform", "translate(" + [width >> 1, height >> 1] + ")")
+            .selectAll("text")
+              .data(words)
+            .enter().append("text")
+              .style("font-size", function(d) { return xScale(d.value) + "px"; })
+              .style("font-family", d => d.font)
+              .style("fill", function(d, i) { return fill(i); })
+              .attr("text-anchor", "middle")
+              .attr("transform", function(d) {
+                return "translate(" + [d.x, d.y] + ")rotate(" + d.rotate + ")";
+              })
+              .text(function(d) { return d.key; });
+        }
+
+        d3.layout.cloud().stop();
+      }
 
 
 });
