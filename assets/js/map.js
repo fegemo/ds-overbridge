@@ -221,8 +221,10 @@ d3.queue()
 
 
     let donut = donutChart()
-      .width(300)
-      .height(150)
+      .width(800)
+      .height(600)
+      // .width(300)
+      // .height(150)
       .cornerRadius(3) // sets how rounded the corners are on each slice
       .padAngle(0.015) // effectively dictates the gap between slices
       .variable('frequency')
@@ -237,8 +239,24 @@ d3.queue()
     let maximumClimateFrequency = Math.max(...climatesFrequency.map(c => c.frequency));
     climatesFrequency.forEach(c => c.frequency /= maximumClimateFrequency);
 
-    d3.select('#planets .chart')
+    d3.select('#planets #chart-climate')
       .datum(climatesFrequency)
-      .call(donut);
+      .call(donut)
+
+    let allTerrains = [].concat(...planetsInfo.map(p => p.terrain.split(', ')));
+    let terrainsFrequency = new Map([...new Set(allTerrains)].map(
+      x => [x, allTerrains.filter(y => y === x).length]
+    ));
+    terrainsFrequency = Array.from(terrainsFrequency.entries())
+      .map(([key, value]) => ({ terrain: key, frequency: value}))
+    let maximumTerrainFrequency = Math.max(...terrainsFrequency.map(c => c.frequency));
+    terrainsFrequency.forEach(c => c.frequency /= maximumTerrainFrequency);
+
+    d3.select('#planets #chart-terrain')
+      .datum(terrainsFrequency)
+      .call(donut.category('terrain'));
+
+
+
 
 });

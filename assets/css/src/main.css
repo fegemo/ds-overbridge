@@ -119,3 +119,13 @@ body {
   transform: rotateY(30deg);
   transform-origin: left;
 }
+
+#planets .chart {
+  width: 205px;
+  height: 155px;
+
+  & > svg {
+    transform: scale(0.25);
+    transform-origin: left top;
+  }
+}
