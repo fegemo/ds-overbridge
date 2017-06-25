@@ -295,17 +295,11 @@ d3.queue()
       };
     });
 
-    // PAREI AQUI!!
     languagesFrequency = [...new Set([].concat(...planetsWithLanguages.map(pwl => pwl.languages)))].reduce((frequency, l) => {
       frequency[l] = planetsWithLanguages.filter(pwl => pwl.languages.indexOf(l) !== -1).reduce((count, pi) => count + (Number.isInteger(parseInt(pi.population)) ? parseInt(pi.population) : 1), 0);
       return frequency;
     }, {});
-    // languagesFrequency = planetsWithLanguages.reduce((frequency, pwl) => {
-    //   frequency[pwl.language] = frequency[pwl.language]+1
-    //   return frequency;
-    // }, {});
 
-    debugger;
     drawWordCloud();
 
     function drawWordCloud(){

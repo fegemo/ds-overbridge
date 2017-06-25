@@ -142,6 +142,17 @@ body {
   }
 }
 
+.hud-on-right {
+  transform: rotateY(-30deg);
+  transform-origin: right;
+  right: 0;
+  transition: transform 200ms ease;
+
+  &:hover {
+    transform: rotateY(-20deg);
+  }
+}
+
 #planets .chart {
   width: 205px;
   height: 155px;
