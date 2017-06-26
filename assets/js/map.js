@@ -153,7 +153,8 @@ d3.queue()
   .defer(d3.json, 'data/planets.json')
   .defer(d3.json, 'data/people.json')
   .defer(d3.json, 'data/species.json')
-  .await((err, grid, hyperspace, planets, region, sector, planetsInfo, peopleInfo, speciesInfo) => {
+  .defer(d3.json, 'data/starships.json')
+  .await((err, grid, hyperspace, planets, region, sector, planetsInfo, peopleInfo, speciesInfo, starshipsInfo) => {
     let mapEl = d3.select('#map');
 
     let galaxyMap = map()
@@ -302,7 +303,7 @@ d3.queue()
 
     drawWordCloud();
 
-    function drawWordCloud(){
+    function drawWordCloud() {
       word_count = languagesFrequency;
 
 
@@ -354,5 +355,47 @@ d3.queue()
         d3.layout.cloud().stop();
       }
 
+
+
+
+      // unit plots
+      let selectedPeople = peopleInfo;
+      let genderScale = d3.scaleOrdinal()
+        .domain(['male', 'female', 'n/a', 'none'])
+        .range(['blue', 'pink', 'silver', 'silver']);
+
+      let unitPlot = unit()
+        .width(205)
+        .unitLength(7);
+
+      d3.select('#people-of-interest .chart')
+        .datum(speciesInfo.map(si => {
+          si.people = si.people.map(sip => peopleInfo.find(pi => pi.url === sip));
+          return si;
+        }))
+        .call(unitPlot
+          .height(400)
+          .caption(d => d.name)
+          .units(d => d.people)
+          .unitFillColor(d => genderScale(d.gender))
+        );
+
+
+      let pilotedStarships = starshipsInfo.filter(si => si.pilots.some(pi => selectedPeople.find(sp => sp.url === pi)));
+      let starshipCategories = [...new Set([].concat(...pilotedStarships.map(ps => ps.starship_class.toLowerCase())))];
+      let starshipsByCategory = starshipCategories.map(cat => {
+        return {
+          name: cat,
+          ships: pilotedStarships.filter(ps => ps.starship_class.toLowerCase() === cat)
+        };
+      });
+
+      d3.select('#piloting-knowledge .chart')
+        .datum(starshipsByCategory)
+        .call(unitPlot
+          .height(150)
+          .caption(d => d.name)
+          .units(d => d.ships)
+        );
 
 });
