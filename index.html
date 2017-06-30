@@ -8,34 +8,40 @@
   </head>
   <body>
     <canvas id="starfield"></canvas>
-    <main id="map"></main>
-    <section id="planets" class="hud hud-on-left">
-      <h1>Planets</h1>
-      <div class="chart" id="chart-climate"></div>
-      <div class="chart" id="chart-terrain"></div>
-    </section>
-    <section id="languages" class="hud hud-on-left">
-      <h1>Languages</h1>
-      <div class="chart" id="chart-languages"></div>
-    </section>
-    <section id="people-of-interest" class="hud hud-on-right">
-      <h1>Watched Subjects</h1>
-      <div class="chart">
 
-      </div>
-    </section>
-    <section id="piloting-knowledge" class="hud hud-on-right">
-      <h1>Piloting Knowledge</h1>
-      <div class="chart">
+    <main id="dashboard">
+      <section id="map"></section>
+      <section id="planets" class="hud hud-on-left">
+        <h1>Planets</h1>
+        <div class="chart" id="chart-climate"></div>
+        <div class="chart" id="chart-terrain"></div>
+      </section>
+      <section id="languages" class="hud hud-on-left">
+        <h1>Languages</h1>
+        <div class="chart" id="chart-languages"></div>
+      </section>
+      <section id="people-of-interest" class="hud hud-on-right">
+        <h1>Watched Subjects</h1>
+        <div class="chart"></div>
+      </section>
+      <section id="piloting-knowledge" class="hud hud-on-right">
+        <h1>Piloting Knowledge</h1>
+        <div class="chart"></div>
+      </section>
+    </main>
 
-      </div>
-    </section>
+    <!-- d3 + utils -->
     <script src="vendors/js/d3.js" charset="utf-8"></script>
     <script src="assets/js/util.js" charset="utf-8"></script>
+
+    <!-- graphs and the dashboard-->
     <script src="assets/js/unit-plot.js" charset="utf-8"></script>
     <script src="assets/js/donut.js" charset="utf-8"></script>
     <script src="assets/js/cloud.js" charset="utf-8"></script>
     <script src="assets/js/map.js" charset="utf-8"></script>
+    <script src="assets/js/dashboard.js" charset="utf-8"></script>
+
+    <!-- cosmetic stuff -->
     <script src="assets/js/starfield.js" charset="utf-8"></script>
     <script src="vendors/js/three.min.js" charset="utf-8"></script>
     <script src="assets/js/spacesphere.js" charset="utf-8"></script>
