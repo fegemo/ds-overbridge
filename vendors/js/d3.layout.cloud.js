@@ -69,9 +69,6 @@ module.exports = function() {
           // Temporary hack
           d.x -= size[0] >> 1;
           d.y -= size[1] >> 1;
-        } else {
-          console.log('DROPPED STHG: ' + d)
-          console.dir(d);
         }
       }
       if (i >= n) {
