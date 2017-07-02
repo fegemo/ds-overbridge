@@ -11,6 +11,7 @@ body {
 }
 
 :root {
+  --hud-rotation: 50deg;
   --cover-page: {
     position: absolute;
     top: 0;
@@ -105,10 +106,9 @@ body {
   z-index: 3;
   background-color: rgba(0,0,0,.25);
   color: white;
-  /*width: 300px;*/
   transition: all 200ms ease;
-  /*border-width: 0;*/
   border: 1px solid rgba(0,0,0,0);
+  cursor: initial;
 
   & > :not(.chart) {
     transition: all 200ms ease;
@@ -133,35 +133,30 @@ body {
 }
 
 .hud-on-left {
-  transform: rotateY(30deg);
+  transform: rotateY(var(--hud-rotation));
   transform-origin: left;
   left: 0;
   transition: transform 200ms ease;
 
   &:hover {
-    transform: rotateY(20deg);
+    transform: rotateY(0deg);
   }
 }
 
 .hud-on-right {
-  transform: rotateY(-30deg);
+  transform: rotateY(calc(-1 * var(--hud-rotation)));
   transform-origin: right;
   right: 0;
   transition: transform 200ms ease;
 
   &:hover {
-    transform: rotateY(-20deg);
+    transform: rotateY(0deg);
   }
 }
 
 #planets .chart {
   width: 205px;
   height: 155px;
-
-  & > svg {
-    /*transform: scale(0.25);*/
-    /*transform-origin: left top;*/
-  }
 }
 
 #languages {
