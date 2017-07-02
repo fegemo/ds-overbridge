@@ -1,3 +1,4 @@
+
 // the dashboard must:
 //  0. create an event dispatcher ('planetschange', at least)
 //  1. fetch the data
@@ -44,7 +45,7 @@ function dashboard() {
     selection.each((_, i, nodes) => {
       let dashboardEl = d3.select(nodes[i]);
 
-      //  0. create an event dispatcher ('planetschange', at least)
+      //  0. create an event dispatcher ('planetschange' when users selects planets)
       // dipatching events: https://bl.ocks.org/mbostock/5872848
       let dispatch = d3.dispatch('dataready', 'planetschange');
 
@@ -234,7 +235,7 @@ function dashboard() {
           .margin({left: 5, top: 5, right: 5, bottom: 5})
           .cornerRadius(3)
           .padAngle(0.015)
-          .variable('frequency')
+          .variable('planets')
           .category('climate');
 
         d3.select('#chart-climate')
@@ -317,7 +318,7 @@ function dashboard() {
             ...selectedPlanets.map(p => p.climate.split(', '))
           );
           let climatesFrequency = d3.entries(countBy(allClimates, c => c))
-            .map(c => ({climate: c.key, frequency: c.value}));
+            .map(c => ({climate: c.key, planets: c.value}));
 
           visualizations.climate.data(climatesFrequency);
         });

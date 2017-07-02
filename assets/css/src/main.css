@@ -175,3 +175,10 @@ body {
 #piloting-knowledge {
   bottom: 1em;
 }
+
+#ambient-control {
+  position: fixed;
+  bottom: 0.5em;
+  left: 1em;
+  z-index: 4;
+}
