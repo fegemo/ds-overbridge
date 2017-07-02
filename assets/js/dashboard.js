@@ -226,7 +226,19 @@ function dashboard() {
         dashboardEl.select('#languages .chart')
           .call(visualizations.languages);
 
+        //  3.5 load the climates donut chart
+        visualizations.climate = donutChart()
+          .width(195)
+          .height(195)
+          .transTime(750)
+          .margin({left: 5, top: 5, right: 5, bottom: 5})
+          .cornerRadius(3)
+          .padAngle(0.015)
+          .variable('frequency')
+          .category('climate');
 
+        d3.select('#chart-climate')
+          .call(visualizations.climate);
 
         //  4. bind the plots with the map
         //  4.1 bind the species unit plot
@@ -300,6 +312,15 @@ function dashboard() {
         });
 
         //  4.4 climate and terrains donut charts
+        dispatch.on('planetschange', selectedPlanets => {
+          let allClimates = [].concat(
+            ...selectedPlanets.map(p => p.climate.split(', '))
+          );
+          let climatesFrequency = d3.entries(countBy(allClimates, c => c))
+            .map(c => ({climate: c.key, frequency: c.value}));
+
+          visualizations.climate.data(climatesFrequency);
+        });
 
       });
 
@@ -435,7 +456,7 @@ d3.queue()
       .datum(climatesFrequency)
       .call(donut)
 
-    let allTerrains = [].concat(...planetsInfo.map(p => p.terrain.split(', ')));
+    let allTerrains = [].concat(...planetsInfo.map(p => p.terrain.split(/[\s,]+/)));
     let terrainsFrequency = new Map([...new Set(allTerrains)].map(
       x => [x, allTerrains.filter(y => y === x).length]
     ));

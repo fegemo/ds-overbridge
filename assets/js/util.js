@@ -32,3 +32,9 @@ var joinWithURL = (obj, ...prop) =>
 
 var numberOr = (n, otherwise) =>
   Number.isNaN(+n) ? otherwise : +n
+
+var countBy = (list, iteratee) =>
+  list.reduce((group, current) => {
+    group[iteratee(current)] = (group[iteratee(current)] + 1) || 1;
+    return group;
+  }, {})
