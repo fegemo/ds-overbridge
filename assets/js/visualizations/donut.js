@@ -33,14 +33,8 @@ function donutChart() {
           .cornerRadius(cornerRadius)
           .padAngle(padAngle);
 
-        // this arc is used for aligning the text labels
-        let outerArc = d3.arc()
-          .outerRadius(radius * 0.9)
-          .innerRadius(radius * 0.9);
-
         // append the svg object to the selection
-        // var svg = selection.append('svg')
-        let svg = selection.append('svg')
+        let svg = d3.select(nodes[i]).append('svg')
           .attr('width', width + margin.left + margin.right)
           .attr('height', height + margin.top + margin.bottom)
           .append('g')
@@ -48,8 +42,6 @@ function donutChart() {
 
         // g elements to keep elements within svg modular
         svg.append('g').attr('class', 'slices');
-        svg.append('g').attr('class', 'labelName');
-        svg.append('g').attr('class', 'lines');
 
         // add and color the donut slices
         let path = svg.select('.slices')
@@ -59,34 +51,32 @@ function donutChart() {
             .attr('fill', d => color(d.data[category]))
             .attr('d', arc);
 
-        // add tooltip to mouse events on slices and labels
-        d3.selectAll('.labelName text, .slices path').call(toolTip);
+        // add tooltip to mouse events on slices
+        svg.selectAll('.slices path').call(toolTip);
 
         // ====================================================================
         // FUNCTION TO UPDATE CHART
         updateData = function() {
 
-          let updatePath = d3.select('.slices').selectAll('path');
+          let updatePath = svg.select('.slices').selectAll('path');
 
           let data0 = path.data(), // store the current data before updating
               data1 = pie(data);
 
-          // update data attached to the slices, labels, and polylines.
+          // update data attached to the slices
           // the key function assigns the data to the correct element,
           // rather than in order of how the data appears. This means that
           // if a category already exists in the chart, it will have its
           // data updated rather than removed and re-added.
           updatePath = updatePath.data(data1, key);
-          // updateLines = updateLines.data(data1, key);
-          // updateLabels = updateLabels.data(data1, key);
 
-          // adds new slices/lines/labels
+          // adds new slices
           updatePath.enter().append('path')
             .each((d, i, nodes) => nodes[i]._current = findNeighborArc(i, data0, data1, key) || d)
             .attr('fill', d => color(d.data[category]))
             .attr('d', arc);
 
-          // removes slices/labels/lines that are not in the current dataset
+          // removes slices that are not in the current dataset
           updatePath.exit()
             .transition()
             .duration(transTime/3)
@@ -94,12 +84,12 @@ function donutChart() {
             .style('opacity', 0)
             .remove();
 
-          // animates the transition from old angle to new angle for slices/lines/labels
+          // animates the transition from old angle to new angle for slices
           updatePath.transition().duration(transTime)
             .attrTween('d', arcTween);
 
-          // add tooltip to mouse events on slices and labels
-          d3.selectAll('.labelName text, .slices path').call(toolTip);
+          // add tooltip to mouse events on slices
+          svg.selectAll('.slices path').call(toolTip);
 
         };
 
@@ -110,7 +100,7 @@ function donutChart() {
         // function that creates and adds the tool tip to a selected element
         function toolTip(selection) {
 
-          // add tooltip (svg circle element) when mouse enters label or slice
+          // add tooltip (svg circle element) when mouse enters slice
           selection.on('mouseenter', data => {
 
             svg.append('text')
@@ -129,13 +119,14 @@ function donutChart() {
 
             });
 
-            // remove the tooltip when mouse leaves the slice/label
+            // remove the tooltip when mouse leaves the slice
             selection.on('mouseout', function () {
-              d3.selectAll('.toolCircle').remove();
+              svg.selectAll('.toolCircle').remove();
             });
         }
 
-        // function to create the HTML string for the tool tip. Loops through each key in data object
+        // function to create the HTML string for the tool tip. Loops
+        // through each key in data object
         // and returns the html string key: value
         function toolTipHTML(data) {
 
@@ -153,9 +144,11 @@ function donutChart() {
             // text element works. The 'dy' attr on
             // tspan effectively imitates a line break.
             if (i === 0) {
-              tip += `<tspan x="0">${key}: ${value}</tspan>`;
+              tip += `<tspan x="0">${key}: </tspan>
+                <tspan style="font-weight: bold; font-size: 120%;">${value}</tspan>`;
             } else {
-              tip += `<tspan x="0" dy="1.2em">${key}: ${value}</tspan>`;
+              tip += `<tspan x="0" dy="1.2em">${key}:</tspan>
+                <tspan x="0" dy="1em" style="font-weight: bold; font-size: 120%;">${value}</tspan>`;
             }
             i++;
           }
@@ -208,7 +201,6 @@ function donutChart() {
       });
     }
 
-    // getter and setter functions. See Mike Bostocks post "Towards Reusable Charts" for a tutorial on how this works.
     build.width = function(value) {
       if (!arguments.length) return width;
       width = value;

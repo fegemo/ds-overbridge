@@ -227,7 +227,7 @@ function dashboard() {
         dashboardEl.select('#languages .chart')
           .call(visualizations.languages);
 
-        //  3.5 load the climates donut chart
+        //  3.5.1 load the climates donut chart
         visualizations.climate = donutChart()
           .width(195)
           .height(195)
@@ -240,6 +240,21 @@ function dashboard() {
 
         d3.select('#chart-climate')
           .call(visualizations.climate);
+
+        //  3.5.2 load the terrains donut chart
+        visualizations.terrain = donutChart()
+          .width(195)
+          .height(195)
+          .transTime(750)
+          .margin({left: 5, top: 5, right: 5, bottom: 5})
+          .cornerRadius(3)
+          .padAngle(0.015)
+          .variable('planets')
+          .category('terrain');
+
+        d3.select('#chart-terrain')
+          .call(visualizations.terrain);
+
 
         //  4. bind the plots with the map
         //  4.1 bind the species unit plot
@@ -318,9 +333,19 @@ function dashboard() {
             ...selectedPlanets.map(p => p.climate.split(', '))
           );
           let climatesFrequency = d3.entries(countBy(allClimates, c => c))
-            .map(c => ({climate: c.key, planets: c.value}));
+            .map(c => ({planets: c.value, climate: c.key}));
 
           visualizations.climate.data(climatesFrequency);
+
+
+
+          let allTerrains = [].concat(
+            ...selectedPlanets.map(p => p.terrain.split(/[\s,]+/))
+          );
+          let terrainsFrequency = d3.entries(countBy(allTerrains, t => t))
+            .map(t => ({planets: t.value, terrain: t.key}));
+
+          visualizations.terrain.data(terrainsFrequency);
         });
 
       });
@@ -347,177 +372,3 @@ d3.select('#dashboard')
           .map(appendWith('.json'))
         )
     );
-
-/*
-// to make it notify progress: https://bl.ocks.org/mbostock/3750941
-// to make it use queue, await and notify: https://stackoverflow.com/questions/31441775/is-it-possible-to-make-a-progress-bar-for-loading-multiple-csv-files-with-d3js
-// TODO: i need to combine both
-d3.queue()
-  .defer(d3.json, 'data/grid.geojson')
-  .defer(d3.json, 'data/hyperspace.geojson')
-  .defer(d3.json, 'data/planets.geojson')
-  .defer(d3.json, 'data/region.geojson')
-  .defer(d3.json, 'data/sector.geojson')
-  .defer(d3.json, 'data/planets.json')
-  .defer(d3.json, 'data/people.json')
-  .defer(d3.json, 'data/species.json')
-  .defer(d3.json, 'data/starships.json')
-  .await((err, grid, hyperspace, planets, region, sector,
-    planetsInfo, peopleInfo, speciesInfo, starshipsInfo) => {
-    let mapEl = d3.select('#map')
-    let galaxyMap = map()
-      .geography([
-        {
-          name: 'grid',
-          features: grid.features,
-          stroke: 'silver',
-          strokeWidth: 0.25,
-          fill: 'transparent'
-        },
-        {
-          name: 'hyperspace',
-          features: hyperspace.features,
-          fill: 'transparent',
-          stroke: 'purple',
-          strokeWidth: '2'
-        },
-        {
-          name: 'planets',
-          features: planets.features
-            // gets only planets for which we have info from movies (planetInfo)
-            .filter(p => {
-              let planetName = (p.properties.name || p.properties.name_web
-                || '').toLowerCase();
-              let planetsWithInfo = planetsInfo.map(
-                pi => pi.name.toLowerCase())
-              return planetsWithInfo.indexOf(planetName) !== -1;
-            })
-            // joins with data from the movies
-            .map(p => {
-              let planetName = (p.properties.name || p.properties.name_web
-                || '').toLowerCase();
-              let fromMovie = planetsInfo.find(
-                pi => pi.name.toLowerCase() === planetName)
-              return Object.assign(p, { movie: fromMovie });
-            }),
-          itemClasses: ['planet'],
-          label: p => p.movie.name
-        },
-        {
-          name: 'region',
-          features: region.features,
-          stroke: '#444',
-          strokeWidth: 1,
-          fill: (d, i) => d3.scaleLinear()
-            .domain([
-              Math.min(...region.features.map(r => r.properties.rid)),
-              Math.max(...region.features.map(r => r.properties.rid))])
-            .interpolate(d3.interpolateHsl)
-            .range([d3.rgb('#fff'), d3.rgb('#444')])(d.properties.rid)
-        },
-        {
-          name: 'sector',
-          features: sector.features,
-          fill: 'transparent',
-          stroke: 'black',
-          strokeWidth: '0.25'
-        }])
-      .width(mapEl.node().getClientRects()[0].width)
-      .height(mapEl.node().getClientRects()[0].height)
-      .onBrushEnd(selected => {
-        dispatch.call('planetschange', null, selected);
-      });
-
-
-    mapEl
-      .call(galaxyMap);
-
-
-
-    let donut = donutChart()
-      .width(800)
-      .height(600)
-      // .width(300)
-      // .height(150)
-      .cornerRadius(3) // sets how rounded the corners are on each slice
-      .padAngle(0.015) // effectively dictates the gap between slices
-      .variable('frequency')
-      .category('climate');
-
-    let allClimates = [].concat(...planetsInfo.map(p => p.climate.split(', ')));
-    let climatesFrequency = new Map([...new Set(allClimates)].map(
-      x => [x, allClimates.filter(y => y === x).length]
-    ));
-    climatesFrequency = Array.from(climatesFrequency.entries())
-      .map(([key, value]) => ({ climate: key, frequency: value}))
-    let maximumClimateFrequency = Math.max(...climatesFrequency.map(c => c.frequency));
-    climatesFrequency.forEach(c => c.frequency /= maximumClimateFrequency);
-
-    d3.select('#planets #chart-climate')
-      .datum(climatesFrequency)
-      .call(donut)
-
-    let allTerrains = [].concat(...planetsInfo.map(p => p.terrain.split(/[\s,]+/)));
-    let terrainsFrequency = new Map([...new Set(allTerrains)].map(
-      x => [x, allTerrains.filter(y => y === x).length]
-    ));
-    terrainsFrequency = Array.from(terrainsFrequency.entries())
-      .map(([key, value]) => ({ terrain: key, frequency: value}))
-    let maximumTerrainFrequency = Math.max(...terrainsFrequency.map(c => c.frequency));
-    terrainsFrequency.forEach(c => c.frequency /= maximumTerrainFrequency);
-
-    d3.select('#planets #chart-terrain')
-      .datum(terrainsFrequency)
-      .call(donut.category('terrain'));
-
-
-
-
-
-    // unit plots
-    let genderScale = d3.scaleOrdinal()
-      .domain(['male', 'female', 'n/a', 'none'])
-      .range(['blue', 'pink', 'silver', 'silver']);
-
-    var peopleUnitPlot = unit()
-      .width(205)
-      .height(400)
-      .unitLength(7)
-      .caption(d => d.name)
-      .units(d => d.people)
-      .unitFillColor(d => genderScale(d.gender));
-
-    d3.select('#people-of-interest .chart')
-      .call(peopleUnitPlot.data([]));
-
-    // d3.select('#people-of-interest .chart')
-    //   .call(peopleUnitPlot
-    //     .data(speciesInfo.map(si => {
-    //       si.people = si.people.map(sip => peopleInfo.find(pi => pi.url === sip));
-    //       return si;
-    //     }))
-    //   );
-
-
-    // let pilotedStarships = starshipsInfo.filter(si => si.pilots.some(pi => selectedPeople.find(sp => sp.url === pi)));
-    // let starshipCategories = [...new Set([].concat(...pilotedStarships.map(ps => ps.starship_class.toLowerCase())))];
-    // let starshipsByCategory = starshipCategories.map(cat => {
-    //   return {
-    //     name: cat,
-    //     ships: pilotedStarships.filter(ps => ps.starship_class.toLowerCase() === cat)
-    //   };
-    // });
-    //
-    // d3.select('#piloting-knowledge .chart')
-    //   // .datum(starshipsByCategory)
-    //   .call(unit()
-    //     .width(205)
-    //     .height(150)
-    //     .unitLength(7)
-    //     .caption(d => d.name)
-    //     .units(d => d.ships)
-    //     .data(starshipsByCategory)
-    //   );
-
-});
-*/

@@ -77,8 +77,8 @@ body {
 
 
 
-/* chart about planets */
-#planets {
+/* chart about geography */
+#geography {
   top: 1em;
 
   & polyline {
@@ -125,6 +125,7 @@ body {
 
   &:hover {
     border-color: #555;
+    z-index: 4;
   }
 
   &:hover > :not(.chart) {
@@ -154,9 +155,18 @@ body {
   }
 }
 
-#planets .chart {
+#geography .chart {
   width: 205px;
-  height: 155px;
+  height: 205px;
+}
+
+#geography .slices > path {
+  cursor: help;
+}
+
+.donut-label-value {
+  font-weight: bold;
+  font-size: 120%;
 }
 
 #languages {
