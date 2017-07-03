@@ -19,6 +19,17 @@ function info() {
     aboutModal.classed('showing', false)
   );
 
+  d3.selectAll('#toolbar .toggle-button')
+    .each((d, i, nodes) => d3.select(nodes[i]).datum({
+      title: d3.select(nodes[i]).attr('data-tooltip'),
+      theme: 'universe',
+      gravity: 'south',
+      target: d3.select('#toolbar').node(),
+      by: 'south',
+      distance: 0
+    }))
+    .call(d3.kodama.tooltip())
+
 }
 
 info();
