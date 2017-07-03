@@ -11,7 +11,8 @@ body {
 }
 
 :root {
-  --hud-rotation: 50deg;
+  --hud-vertical-margin: 1em;
+  --hud-chart-height: 205px;
   --cover-page: {
     position: absolute;
     top: 0;
@@ -77,108 +78,37 @@ body {
 
 
 
-/* chart about geography */
-#geography {
-  top: 1em;
-
-  & polyline {
-    opacity: .3;
-    stroke: white;
-    stroke-width: 2px;
-    fill: none;
-  }
-
-  & .labelName tspan {
-    font-style: normal;
-    font-weight: 700;
-    fill: white;
-  }
-
-  & .labelName {
-    font-family: monospace;
-    font-size: 8px;
-    fill: white;
-  }
+/* charts about geography */
+#climates {
+  top: var(--hud-vertical-margin);
 }
 
-.hud {
-  position: absolute;
-  z-index: 3;
-  background-color: rgba(0,0,0,.25);
-  color: white;
-  transition: all 200ms ease;
-  border: 1px solid rgba(0,0,0,0);
-  cursor: initial;
-
-  & > :not(.chart) {
-    transition: all 200ms ease;
-    opacity: 0;
-  }
-
-  & h1 {
-    font-family: monospace;
-    padding: 0.15em;
-    margin: 0 0 0.5em;
-    border-bottom: 1px solid #555;
-    font-weight: normal;
-  }
-
-  &:hover {
-    border-color: #555;
-    z-index: 4;
-  }
-
-  &:hover > :not(.chart) {
-    opacity: 1;
-  }
+#terrains {
+  top: calc(var(--hud-vertical-margin) + var(--hud-chart-height));
 }
 
-.hud-on-left {
-  transform: rotateY(var(--hud-rotation));
-  transform-origin: left;
-  left: 0;
-  transition: transform 200ms ease;
-
-  &:hover {
-    transform: rotateY(0deg);
+#climate,
+#terrain {
+  & .chart {
+    width: var(--hud-chart-height);
+    height: var(--hud-chart-height);
   }
-}
 
-.hud-on-right {
-  transform: rotateY(calc(-1 * var(--hud-rotation)));
-  transform-origin: right;
-  right: 0;
-  transition: transform 200ms ease;
-
-  &:hover {
-    transform: rotateY(0deg);
+  & .slices > path {
+    cursor: help;
   }
-}
-
-#geography .chart {
-  width: 205px;
-  height: 205px;
-}
-
-#geography .slices > path {
-  cursor: help;
-}
-
-.donut-label-value {
-  font-weight: bold;
-  font-size: 120%;
 }
 
 #languages {
-  bottom: 1em;
+  bottom: var(--hud-vertical-margin);
 }
 
 #people-of-interest {
-  top: 1em;
+  top: var(--hud-vertical-margin);
 }
 
 #piloting-knowledge {
-  bottom: 1em;
+  bottom: var(--hud-vertical-margin);
 }
 
 #ambient-control {

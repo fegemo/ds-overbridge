@@ -4,6 +4,7 @@
     <meta charset="utf-8">
     <title>Death Star's Command Control Interface</title>
     <link rel="stylesheet" href="assets/css/main.css">
+    <link rel="stylesheet" href="assets/css/hud.css">
     <link rel="shortcut icon" href="assets/img/favicon.png">
   </head>
   <body>
@@ -11,22 +12,25 @@
 
     <main id="dashboard">
       <section id="map"></section>
-      <section id="geography" class="hud hud-on-left">
-        <h1>Geography</h1>
-        <div class="chart" id="chart-climate"></div>
-        <div class="chart" id="chart-terrain"></div>
+      <section id="climates" class="hud hud-on-left">
+        <h1>Climates</h1>
+        <div class="chart border-draw" id="chart-climate"></div>
+      </section>
+      <section id="terrains" class="hud hud-on-left">
+        <h1>Terrains</h1>
+        <div class="chart border-draw" id="chart-terrain"></div>
       </section>
       <section id="languages" class="hud hud-on-left">
         <h1>Languages</h1>
-        <div class="chart" id="chart-languages"></div>
+        <div class="chart border-draw" id="chart-languages"></div>
       </section>
       <section id="people-of-interest" class="hud hud-on-right">
         <h1>Watched Subjects</h1>
-        <div class="chart"></div>
+        <div class="chart border-draw"></div>
       </section>
       <section id="piloting-knowledge" class="hud hud-on-right">
         <h1>Piloting Knowledge</h1>
-        <div class="chart"></div>
+        <div class="chart border-draw"></div>
       </section>
     </main>
 

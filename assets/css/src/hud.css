@@ -1,0 +1,153 @@
+:root {
+  --hud-rotation: 50deg;
+  --border-color: color(white alpha(7%));
+  --border-animation-duration: 200ms;
+}
+
+.hud {
+  position: absolute;
+  z-index: 3;
+  background-color: rgba(0,0,0,.35);
+  color: white;
+  transition: all 200ms ease;
+  cursor: initial;
+
+  & > :not(.chart) {
+    transition: all 200ms ease;
+    opacity: 0;
+  }
+
+  & h1 {
+    font-family: monospace;
+    padding: 0.15em;
+    margin: 0 0 0;
+    font-weight: normal;
+    font-size: 14px;
+  }
+
+  &:hover {
+    z-index: 4;
+  }
+
+  &:hover > :not(.chart) {
+    opacity: 1;
+  }
+}
+
+.hud-on-left {
+  transform: rotateY(var(--hud-rotation));
+  transform-origin: left;
+  left: 0;
+  transition: transform 200ms ease;
+  -webkit-clip-path: polygon(71% 0, 81% 20px, 100% 20px, 100% 100%, 0 100%, 0 0);
+  clip-path: polygon(71% 0, 81% 20px, 100% 20px, 100% 100%, 0 100%, 0 0);
+
+  &:hover {
+    transform: rotateY(0deg);
+  }
+}
+
+.hud-on-right {
+  transform: rotateY(calc(-1 * var(--hud-rotation)));
+  transform-origin: right;
+  right: 0;
+  transition: transform 200ms ease;
+  -webkit-clip-path: polygon(30px 20px, 50px 0, 100% 0, 100% 100%, 0 100%, 0 20px);
+  clip-path: polygon(30px 20px, 50px  0, 100% 0, 100% 100%, 0 100%, 0 20px);
+
+  &:hover {
+    transform: rotateY(0deg);
+  }
+
+  & h1 {
+    text-align: right;
+  }
+}
+
+
+.border-draw {
+  border: 0;
+  box-sizing: border-box;
+  position: relative;
+}
+
+.border-draw::before,
+.border-draw::after {
+  box-sizing: inherit;
+  content: '';
+  position: absolute;
+  border: 1px solid transparent;
+  width: 0;
+  height: 0;
+}
+
+.border-draw::before {
+  top: 0;
+  left: 0;
+}
+
+.border-draw::after {
+  bottom: 0;
+  right: 0;
+}
+
+.border-draw:hover:not(:empty)::before,
+.border-draw:hover:not(:empty)::after {
+  width: 100%;
+  height: 100%;
+}
+
+.border-draw:hover:not(:empty)::before {
+  border-top-color: var(--border-color);
+  border-right-color: var(--border-color);
+  transition: width var(--border-animation-duration) ease-out,
+    height var(--border-animation-duration) ease-out var(--border-animation-duration);
+
+  /*height: 0;
+  animation: grow-w var(--border-animation-duration) ease-out 0s infinite forwards,
+    grow-h var(--border-animation-duration) ease-out var(--border-animation-duration) infinite forwards;*/
+}
+
+.border-draw:hover:not(:empty)::after {
+  border-bottom-color: var(--border-color);
+  border-left-color: var(--border-color);
+  transition: border-color 0s ease-out calc(var(--border-animation-duration)*2),
+    width var(--border-animation-duration) ease-out calc(var(--border-animation-duration)*2),
+    height var(--border-animation-duration) ease-out calc(var(--border-animation-duration)*3);
+
+  /*border-bottom-color: transparent;
+  border-left-color: transparent;
+  height: 0;
+  animation: border-appear 0s ease-out calc(var(--border-animation-duration)*2) infinite forwards,
+    grow-w var(--border-animation-duration) ease-out calc(var(--border-animation-duration)*2)  infinite forwards,
+    grow-h var(--border-animation-duration) ease-out calc(var(--border-animation-duration)*3)  infinite forwards;*/
+}
+
+/*@keyframes grow-w {
+  from {
+    width: 0;
+  }
+  to {
+    width: 100%;
+  }
+}
+
+@keyframes grow-h {
+  from {
+    height: 0;
+  }
+  to {
+    height: 100%;
+  }
+}
+
+@keyframes border-appear {
+  from {
+    border-bottom-color: transparent;
+    border-left-color: transparent;
+  }
+  to {
+    border-bottom-color: var(--border-color);
+    border-left-color: var(--border-color);
+  }
+}*/
