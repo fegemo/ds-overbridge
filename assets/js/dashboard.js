@@ -333,7 +333,8 @@ function dashboard() {
             ...selectedPlanets.map(p => p.climate.split(', '))
           );
           let climatesFrequency = d3.entries(countBy(allClimates, c => c))
-            .map(c => ({planets: c.value, climate: c.key}));
+            .map(c => ({planets: c.value, climate: c.key}))
+            .sort((c1, c2) => c2.planets - c1.planets);
 
           visualizations.climate.data(climatesFrequency);
 
@@ -343,7 +344,8 @@ function dashboard() {
             ...selectedPlanets.map(p => p.terrain.split(/[\s,]+/))
           );
           let terrainsFrequency = d3.entries(countBy(allTerrains, t => t))
-            .map(t => ({planets: t.value, terrain: t.key}));
+            .map(t => ({planets: t.value, terrain: t.key}))
+            .sort((t1, t2) => t1.planets - t2.planets);
 
           visualizations.terrain.data(terrainsFrequency);
         });
