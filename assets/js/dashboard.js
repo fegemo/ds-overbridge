@@ -187,10 +187,31 @@ function dashboard() {
         visualizations.species = unit()
           .width(205)
           .height(400)
-          .unitLength(7)
+          .unitLength(10)
           .caption(d => d.name)
           .units(d => d.people)
-          .unitFillColor(d => genderScale(d.gender));
+          .unitFillColor(d => genderScale(d.gender))
+          .tooltipFormat(d => {
+            // gets the id of this person, e.g., the 2 in
+            // "http://swapi.co/api/people/2/"
+            let id = d.url.substring(
+              d.url.lastIndexOf('/', d.url.lastIndexOf('/') - 1) + 1,
+              d.url.lastIndexOf('/')
+            );
+
+            return {
+              title: `Subject ${id}: <span class="tooltip-name">${d.name}</span>
+                <small>(${d.species[0].name})</small>`,
+              items: [
+                  {
+                    title: 'Gender',
+                    value: `${d.gender} <span class="unit-symbol" style="background: ${genderScale(d.gender)}"></span>`
+                  },
+                  {title: 'Sightings', value: `${d.films.length} situations`},
+                  {title: 'Pilots', value: `${d.starships.length} starships`}
+              ]
+            }
+          });
 
         dashboardEl.select('#people-of-interest .chart')
           .call(visualizations.species);
@@ -205,15 +226,36 @@ function dashboard() {
               numberOr(si.MGLT, -Infinity)))
           ])
           .interpolate(d3.interpolateHsl)
-          .range([d3.rgb('#444'), d3.rgb('#fff')]);
+          .range([d3.rgb('#333'), d3.rgb('#fff')]);
 
         visualizations.starships = unit()
           .width(205)
           .height(150)
-          .unitLength(7)
+          .unitLength(10)
           .caption(d => d.name)
           .units(d => d.ships)
-          .unitFillColor(d => Number.isNaN(+d.MGLT) ? 'purple' : mgltScale(+d.MGLT));
+          .unitFillColor(d => Number.isNaN(+d.MGLT) ? 'purple' : mgltScale(+d.MGLT))
+          .tooltipFormat(d => {
+            // gets the id of this starship, e.g., the 6 in
+            // "http://swapi.co/api/starship/6/"
+            let id = d.url.substring(
+              d.url.lastIndexOf('/', d.url.lastIndexOf('/') - 1) + 1,
+              d.url.lastIndexOf('/')
+            );
+
+            return {
+              title: `Ship ${id}: <span class="tooltip-name">${d.name}</span>`,
+              items: [
+                  {
+                    title: '<abbr title="Maximum number of Megalights">MGLT</abbr> <small>(speed)</small>',
+                    value: `${d.MGLT} megalights <span class="unit-symbol" style="background: ${Number.isNaN(+d.MGLT) ? 'purple' : mgltScale(+d.MGLT)}"></span>`},
+                  {title: 'Starship Class', value: `${d.starship_class}`},
+                  {title: 'Model', value: `${d.model}`},
+                  {title: 'Manufacturer', value: `${d.manufacturer.split(/,[\s]*/).join('<br>')}`},
+                  {title: 'Pilots', value: `${d.pilots.length} people`},
+              ]
+            }
+          });
 
         dashboardEl.select('#piloting-knowledge .chart')
           .call(visualizations.starships);
@@ -278,7 +320,7 @@ function dashboard() {
         //  4.2 bind the starships unit plot
         dispatch.on('planetschange.starships', selectedPlanets => {
           let selectedPeople = [].concat(...selectedPlanets.map(sp => sp.residents));
-          let pilotedStarships = [].concat(...selectedPeople.map(sp => sp.starships));
+          let pilotedStarships = [...new Set([].concat(...selectedPeople.map(sp => sp.starships)))];
           let starshipCategories = [...new Set(
             [].concat(
               ...pilotedStarships.map(ps => ps.starship_class.toLowerCase())

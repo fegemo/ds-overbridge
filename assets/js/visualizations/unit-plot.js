@@ -9,10 +9,43 @@ function unit() {
   let legendFontSize = 12;
   let legendVerticalMargin = 6;
   let legendHorizontalMargin = 6;
+  let tooltipFormat = {};
   let data = [];
   let units = null;
   let caption = null;
   let updateData = null;
+
+  if (!!d3.kodama) {
+    // registers a theme called 'universe'
+    d3.kodama.themeRegistry('universe', {
+      frame: {
+        padding: '0px',
+        background: 'rgba(0, 0, 0, .8)',
+        'font-family': 'Arial, OpenSans, sans-serif',
+        'border': '1px solid rgb(8, 24, 49)',
+        color: 'rgb(245,240,220)',
+        'font-size': '12px'//,
+      },
+      title: {
+        'text-align': 'center',
+        'padding': '4px',
+        'border-bottom': '1px solid rgb(8, 24, 49)',
+        color: 'rgb(119, 152, 255)',
+        'text-shadow': '2px 2px 9px, -2px -2px 11px',
+        background: 'black'
+      },
+      item_title: {
+        'text-align': 'right',
+        'color': 'rgb(220,200,120)',
+        'font-size': '80%'
+      },
+      item_value: {
+        'padding': '1px 2px 1px 10px',
+        'color': 'rgb(234, 224, 184)'
+      },
+      options: null
+    });
+  }
 
   function build(selection) {
     selection.each(function() {
@@ -146,6 +179,16 @@ function unit() {
           .attr('dy', legendHeight);
       }
 
+      let formatUnitTooltip = d => {
+        return Object.assign({
+          theme: 'universe',
+          distance: 0,
+          gravity: 'left',
+          target: svg.node(),
+          by: 'left'
+        }, tooltipFormat(d));
+      };
+
       // creates/updates/removes unit circles
       let buildUnits = ({ legendWidth, legendHeight, categoryGroup,
         categoryGroupEnter }) => {
@@ -168,8 +211,17 @@ function unit() {
           .attr('r', unitLength / 2);
 
         // defines the color of each circle, no matter if entering or updating
-        unitsCircles.merge(unitsCirclesEnter)
+        let unitCirclesMerged = unitsCircles.merge(unitsCirclesEnter)
           .style('fill', unitFillColor)
+
+        if (!!d3.kodama) {
+          unitCirclesMerged.call(d3.kodama
+            .tooltip()
+            .format(formatUnitTooltip)
+            .holdDuration(200)
+            .fadeOutDuration(200)
+          );
+        }
 
         // fades out exiting circles
         let unitsCirclesExit = unitsCircles.exit()
@@ -269,6 +321,15 @@ function unit() {
       return legendHorizontalMargin;
     } else {
       legendHorizontalMargin = value;
+      return build;
+    }
+  };
+
+  build.tooltipFormat = value => {
+    if (typeof value === 'undefined') {
+      return tooltipFormat;
+    } else {
+      tooltipFormat = value;
       return build;
     }
   };

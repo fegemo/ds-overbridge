@@ -111,6 +111,30 @@ body {
   bottom: var(--hud-vertical-margin);
 }
 
+.unit-group circle {
+  cursor: help;
+  transition: opacity 150ms ease;
+
+  &:hover {
+    opacity: 0.7;
+  }
+}
+
+.kodama-tooltip table {
+  width: 100%;
+}
+
+.kodama-tooltip .tooltip-name {
+  color: white;
+}
+
+.unit-symbol {
+  display: inline-block;
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+}
+
 #main-header {
   position: absolute;
   top: 0;
@@ -158,13 +182,6 @@ body {
     width: 1.25em;
     height: 1.25em;
   }
-}
-
-#ambient-control {
-  position: fixed;
-  bottom: 0.5em;
-  left: 1em;
-  z-index: 4;
 }
 
 #starfield {
