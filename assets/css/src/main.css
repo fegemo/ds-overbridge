@@ -87,8 +87,8 @@ body {
   top: calc(var(--hud-vertical-margin) + var(--hud-chart-height));
 }
 
-#climate,
-#terrain {
+#climates,
+#terrains {
   & .chart {
     width: var(--hud-chart-height);
     height: var(--hud-chart-height);
@@ -109,6 +109,54 @@ body {
 
 #piloting-knowledge {
   bottom: var(--hud-vertical-margin);
+}
+
+#main-header {
+  position: absolute;
+  top: 0;
+  left: 50%;
+  margin-left: -18em;
+  background-color: color(black alpha(50%));
+  font-family: monospace;
+  color: white;
+  z-index: 4;
+  padding: 0 1em;
+  box-sizing: border-box;
+  width: 36em;
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+  clip-path: polygon(0 0, 100% 0, 96% 100%, 4% 100%);
+}
+
+#toolbar {
+  display: flex;
+  align-items: center;
+  flex-grow: 1;
+  justify-content: space-around;
+  justify-content: space-evenly;
+  margin-left: 1em;
+}
+
+.toggle-button {
+  background: none;
+  border: none;
+  outline: none;
+  position: relative;
+  box-sizing: border-box;
+  padding: 0;
+  width: 1.25em;
+  height: 1.25em;
+
+  &:active {
+    top: 1px;
+    left: 1px;
+  }
+
+  & img {
+    width: 1.25em;
+    height: 1.25em;
+  }
 }
 
 #ambient-control {

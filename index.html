@@ -9,7 +9,20 @@
   </head>
   <body>
     <canvas id="starfield"></canvas>
-
+    <header id="main-header">
+      <h1>Death Star Overbridge</h1>
+      <div id="toolbar">
+        <button type="button" id="info-toggle" class="toggle-button">
+          <img src="assets/img/info.svg" alt="A letter i standing for info">
+        </button>
+        <button type="button" id="sound-toggle" class="toggle-button">
+          <img src="assets/img/sound-on.svg" alt="A sound box turned on">
+        </button>
+        <button type="button" id="ambient-control-toggle" class="toggle-button">
+          <img src="assets/img/cog.svg" alt="An icon of a cog">
+        </button>
+      </div>
+    </header>
     <main id="dashboard">
       <section id="map"></section>
       <section id="climates" class="hud hud-on-left">
@@ -33,10 +46,6 @@
         <div class="chart border-draw"></div>
       </section>
     </main>
-
-    <aside id="ambient-control">
-      <button type="button" id="ambient-sound-control">Play</button>
-    </aside>
 
     <!-- d3 + utils -->
     <script src="vendors/js/d3.js" charset="utf-8"></script>

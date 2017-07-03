@@ -70,9 +70,6 @@ function RoomEffectsSample(inputs) {
     ctx.impulseResponses = buffers.splice(1);
     ctx.impulseResponseBuffer = ctx.impulseResponses[0];
 
-    let button = document.querySelector('button#ambient-sound-control');
-    // button.removeAttribute('disabled');
-    button.innerHTML = 'Pause';
     sample.playPause();
   }
   loader.load();
@@ -109,8 +106,8 @@ RoomEffectsSample.prototype.playPause = function() {
 
 
 let sample = new RoomEffectsSample(1);
-document.querySelector('button#ambient-sound-control')
+document.querySelector('button#sound-toggle')
   .addEventListener('click', e => {
     sample.playPause();
-    e.currentTarget.innerHTML = sample.isPlaying ? 'Pause' : 'Play';
+    e.currentTarget.querySelector('img').src = sample.isPlaying ? 'assets/img/sound-on.svg' : 'assets/img/sound-off.svg';
   });
