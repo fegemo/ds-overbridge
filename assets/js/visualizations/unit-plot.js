@@ -14,117 +14,6 @@ function unit() {
   let caption = null;
   let updateData = null;
 
-  build.width = value => {
-    if (typeof value === 'undefined') {
-      return width;
-    } else {
-      width = value;
-      return build;
-    }
-  };
-
-  build.height = value => {
-    if (typeof value === 'undefined') {
-      return height;
-    } else {
-      height = value;
-      return build;
-    }
-  };
-
-  build.unitLength = value => {
-    if (typeof value === 'undefined') {
-      return unitLength;
-    } else {
-      unitLength = value;
-      return build;
-    }
-  };
-
-  build.unitMargin = value => {
-    if (typeof value === 'undefined') {
-      return unitMargin;
-    } else {
-      unitMargin = value;
-      return build;
-    }
-  };
-
-  build.unitFillColor = value => {
-    if (typeof value === 'undefined') {
-      return unitFillColor;
-    } else {
-      unitFillColor = value;
-      return build;
-    }
-  };
-
-  build.legendFontFamily = value => {
-    if (typeof value === 'undefined') {
-      return legendFontFamily;
-    } else {
-      legendFontFamily = value;
-      return build;
-    }
-  };
-
-  build.legendFontSize = value => {
-    if (typeof value === 'undefined') {
-      return legendFontSize;
-    } else {
-      legendFontSize = value;
-      return build;
-    }
-  };
-
-  build.legendVerticalMargin = value => {
-    if (typeof value === 'undefined') {
-      return legendVerticalMargin;
-    } else {
-      legendVerticalMargin = value;
-      return build;
-    }
-  };
-
-  build.legendHorizontalMargin = value => {
-    if (typeof value === 'undefined') {
-      return legendHorizontalMargin;
-    } else {
-      legendHorizontalMargin = value;
-      return build;
-    }
-  };
-
-  build.units = value => {
-    if (typeof value === 'undefined') {
-      return units;
-    } else {
-      units = value;
-      return build;
-    }
-  };
-
-  build.caption = value => {
-    if (typeof value === 'undefined') {
-      return caption;
-    } else {
-      caption = value;
-      return build;
-    }
-  };
-
-  build.data = value => {
-    if (typeof value === 'undefined') {
-      return data;
-    } else {
-      data = value;
-      if (typeof updateData === 'function') {
-        updateData();
-      }
-      return build;
-    }
-  }
-
   function build(selection) {
     selection.each(function() {
       // generate chart here
@@ -300,6 +189,118 @@ function unit() {
 
       updateData();
     });
+  }
+
+
+  build.width = value => {
+    if (typeof value === 'undefined') {
+      return width;
+    } else {
+      width = value;
+      return build;
+    }
+  };
+
+  build.height = value => {
+    if (typeof value === 'undefined') {
+      return height;
+    } else {
+      height = value;
+      return build;
+    }
+  };
+
+  build.unitLength = value => {
+    if (typeof value === 'undefined') {
+      return unitLength;
+    } else {
+      unitLength = value;
+      return build;
+    }
+  };
+
+  build.unitMargin = value => {
+    if (typeof value === 'undefined') {
+      return unitMargin;
+    } else {
+      unitMargin = value;
+      return build;
+    }
+  };
+
+  build.unitFillColor = value => {
+    if (typeof value === 'undefined') {
+      return unitFillColor;
+    } else {
+      unitFillColor = value;
+      return build;
+    }
+  };
+
+  build.legendFontFamily = value => {
+    if (typeof value === 'undefined') {
+      return legendFontFamily;
+    } else {
+      legendFontFamily = value;
+      return build;
+    }
+  };
+
+  build.legendFontSize = value => {
+    if (typeof value === 'undefined') {
+      return legendFontSize;
+    } else {
+      legendFontSize = value;
+      return build;
+    }
+  };
+
+  build.legendVerticalMargin = value => {
+    if (typeof value === 'undefined') {
+      return legendVerticalMargin;
+    } else {
+      legendVerticalMargin = value;
+      return build;
+    }
+  };
+
+  build.legendHorizontalMargin = value => {
+    if (typeof value === 'undefined') {
+      return legendHorizontalMargin;
+    } else {
+      legendHorizontalMargin = value;
+      return build;
+    }
+  };
+
+  build.units = value => {
+    if (typeof value === 'undefined') {
+      return units;
+    } else {
+      units = value;
+      return build;
+    }
+  };
+
+  build.caption = value => {
+    if (typeof value === 'undefined') {
+      return caption;
+    } else {
+      caption = value;
+      return build;
+    }
+  };
+
+  build.data = value => {
+    if (typeof value === 'undefined') {
+      return data;
+    } else {
+      data = value;
+      if (typeof updateData === 'function') {
+        updateData();
+      }
+      return build;
+    }
   }
 
 
