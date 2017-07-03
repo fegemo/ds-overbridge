@@ -5,6 +5,7 @@
     <title>Death Star's Command Control Interface</title>
     <link rel="stylesheet" href="assets/css/main.css">
     <link rel="stylesheet" href="assets/css/hud.css">
+    <link rel="stylesheet" href="assets/css/info.css">
     <link rel="shortcut icon" href="assets/img/favicon.png">
   </head>
   <body>
@@ -47,6 +48,12 @@
       </section>
     </main>
 
+    <aside class="modal" id="info-modal">
+      <button type="button" class="modal-dismiss">✕</button>
+      <header class="modal-header"></header>
+      <div class="modal-content"></div>
+    </aside>
+
     <!-- d3 + utils -->
     <script src="vendors/js/d3.js" charset="utf-8"></script>
     <script src="vendors/js/d3.layout.cloud.js" charset="utf-8"></script>
@@ -61,10 +68,11 @@
 
     <!-- cosmetic stuff -->
     <script src="assets/js/ambient/sound.js" charset="utf-8"></script>
-    <script src="assets/js/starfield.js" charset="utf-8"></script>
+    <script src="assets/js/ambient/starfield.js" charset="utf-8"></script>
     <script src="vendors/js/three.min.js" charset="utf-8"></script>
-    <script src="assets/js/spacesphere.js" charset="utf-8"></script>
+    <script src="assets/js/ambient/spacesphere.js" charset="utf-8"></script>
     <script src="assets/js/ambient/distractions.js" charset="utf-8"></script>
+    <script src="assets/js/ambient/info.js" charset="utf-8"></script>
 
   </body>
 </html>
