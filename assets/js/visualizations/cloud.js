@@ -54,7 +54,7 @@ function cloud() {
               .text(d => d.key)
               .merge(texts)
               .transition()
-              .duration(600)
+              .duration(350)
               .style('font-size', d => `${fontScale(d.value)}px`)
               .style('fill', (_, i) => fill(i))
               .attr('transform', d => `translate(${d.x}, ${d.y})rotate(${d.rotate})`)
