@@ -83,7 +83,7 @@ function dashboard() {
       });
 
       //  2. prepare the movies info data
-      filesQueue.await((err, grid, hyperspace, planets, region, sector,
+      filesQueue.await((err, grid, planets, region, sector,
         planetsInfo, peopleInfo, speciesInfo, starshipsInfo) => {
 
           // joins data from the movies using the 'url' field
@@ -127,7 +127,6 @@ function dashboard() {
           dispatch.call('dataready', null, {
             mapData: {
               grid,
-              hyperspace,
               planets,
               region,
               sector
@@ -154,13 +153,13 @@ function dashboard() {
               strokeWidth: 0.25,
               fill: 'transparent'
             },
-            {
-              name: 'hyperspace',
-              features: mapData.hyperspace.features,
-              fill: 'transparent',
-              stroke: 'purple',
-              strokeWidth: '2'
-            },
+            // {
+            //   name: 'hyperspace',
+            //   features: mapData.hyperspace.features,
+            //   fill: 'transparent',
+            //   stroke: 'purple',
+            //   strokeWidth: '2'
+            // },
             {
               name: 'planets',
               features: mapData.planets.features,
@@ -448,7 +447,7 @@ d3.select('#dashboard')
   .call(
     dashboard()
       .mapFiles(
-        ['grid', 'hyperspace', 'planets', 'region', 'sector']
+        ['grid', 'planets', 'region', 'sector']
           .map(prependWith('data/'))
           .map(appendWith('.geojson'))
         )

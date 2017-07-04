@@ -2,7 +2,7 @@ function info() {
   let aboutModal = d3.select('#info-modal');
 
   d3.html('info.template.html', (error, docFragment) => {
-    let attributionTemplate = d3.select(docFragment).select('#attribution-template');
+    let attributionTemplate = d3.select(docFragment).select('#about-template');
 
     aboutModal.select('.modal-header')
       .html(attributionTemplate.select('.modal-header').html());

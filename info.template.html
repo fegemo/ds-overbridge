@@ -1,3 +1,73 @@
+<div type="text/template" id="data-template">
+  <header class="modal-header">
+    <h1 id="data">Data</h1>
+  <p>The data used to create this visualization.</p>
+  </header>
+  <div class="modal-content">
+  <h2 id="data-about-the-movies-characters-etc-">Data about the movies (characters etc.)</h2>
+  <p>The data regarding the movies info was grabbed from the <a href="http://swapi.co/">Star Wars API</a>
+  project. It does not provide full files for each entity, so I made a lot of
+  requests to fetch all of them and then assembled the responses in the files:</p>
+  <ul>
+  <li><code>planets.json</code> (61 <a href="http://swapi.co/api/planets/">planets</a>)</li>
+  <li><code>people.json</code> (87 <a href="http://swapi.co/api/people/">people</a>)</li>
+  <li><code>species.json</code> (37 <a href="http://swapi.co/api/species/">species</a>)</li>
+  <li><code>starships.json</code> (37 <a href="http://swapi.co/api/starships/">starships</a>)</li>
+  </ul>
+  <p>The API has even more data, about the movies (7 so far) and vehicles (39), but
+  they were not used here.</p>
+  <h2 id="data-about-the-galaxy-its-geography-">Data about the galaxy (its geography)</h2>
+  <p>The geographic data was acquired from the <a href="http://www.swgalaxymap.com/">Star Wars Galaxy Map</a> and
+  comprises 5 sets of topography in the <em>geojson</em> format, which became layers
+  on the map: grid, planets, <del>hyperspace</del> (not used), region, sector.</p>
+  <p>To reduce its size, the geographic data was simplified using
+  <a href="http://mapshaper.org/">mapshaper</a> using the Visvalingam method with weighted area. That
+  yielded 44% size reduction with only a small perceived loss.</p>
+  <p>Regarding planets, the <a href="http://www.swgalaxymap.com/">Star Wars Galaxy Map</a> has about 2,068 planets
+  with their coordinates, comprising all of canon and &quot;extended universe&quot;
+  locations. However, as the movies database had information about only 61
+  (canon) planets, only those were considered.</p>
+  <h2 id="joining-the-data">Joining the data</h2>
+  <p>Only planets that exist both on the geographic database and on the movies
+  database were considered. To join their data, two fields called <code>&quot;name&quot;</code>
+  and <code>&quot;name_web&quot;</code> from the <em>planets layer</em> from the geography database were
+  tentatively matched with a field called <code>&quot;name&quot;</code> on the <code>planets.json</code> from
+  the movies database.</p>
+  </div>
+</div>
+<div type="text/template" id="about-template">
+  <header class="modal-header">
+  <h1 id="death-star-s-overbridge">Death Star&#39;s Overbridge</h1>
+  <p>Enter the <strong>III Death Star&#39;s Overbridge</strong> and decide what to destroy next.</p>
+  </header>
+  <div class="modal-content">
+  <h2 id="about">About</h2>
+  <p>What if the <strong>3rd Death Star</strong> was actually constructed? Wear <strong>Lord Vader&#39;s</strong>
+  boots and decide, from its control room (<strong>the Overbridge</strong>), <strong>which planets
+  to destroy</strong> with the death ray next. To aid in the decision, the
+  Overbridge allows the visualization of:</p>
+  <ol>
+  <li>The <strong>galaxy</strong>, its regions, sectors and most notable <strong>planets</strong></li>
+  <li>What are the <strong>climates and terrain types</strong> of the <strong>selected planets</strong><ul>
+  <li>Allows understanding what sort of troops to send down, if necessary</li>
+  <li>Allows seeing which types of climates/terrains might cease existing if
+  the selected planets are indeed destroyed</li>
+  </ul>
+  </li>
+  <li>What are the <strong>languages spoken</strong> on those planets and the <strong>number of
+  individuals</strong> on the selected planets speaking each one</li>
+  <li>Some <strong>watched individuals</strong> that might have their home planets (and lives)
+  destroyed by the next move, <strong>grouped by their species</strong> and
+  <strong>color-coded by gender</strong></li>
+  <li>The <strong>types of starships</strong> those watched individuals know how to pilot<ul>
+  <li>Some starships might become useless if all of its pilots are lost</li>
+  </ul>
+  </li>
+  </ol>
+  <h2 id="the-author">The Author</h2>
+  <p>This was made by Flávio Coutinho for a school project on data visualization.</p>
+  </div>
+</div>
 <div type="text/template" id="attribution-template">
   <header class="modal-header">
     <h1 id="attribution">Attribution</h1>
