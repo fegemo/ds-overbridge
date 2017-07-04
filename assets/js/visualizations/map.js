@@ -125,6 +125,7 @@ function map() {
         })
         .on('end', () => {
           if (!d3.event.selection) {
+            // clears the selection
             svg.selectAll('.layer-planets path.picked').classed('picked', false);
           }
 

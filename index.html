@@ -6,6 +6,7 @@
     <link rel="stylesheet" href="assets/css/main.css">
     <link rel="stylesheet" href="assets/css/hud.css">
     <link rel="stylesheet" href="assets/css/info.css">
+    <link rel="stylesheet" href="assets/css/switch.css">
     <link rel="shortcut icon" href="assets/img/favicon.png">
   </head>
   <body>
@@ -52,6 +53,16 @@
       <button type="button" class="modal-dismiss">✕</button>
       <header class="modal-header"></header>
       <div class="modal-content"></div>
+    </aside>
+
+    <aside id="action-bar">
+      <div class="switch" id="selection-type-switch">
+         <input type="radio" class="switch-input" name="selection-type" value="SELECT_THESE" id="select-these" checked>
+         <label for="select-these" class="switch-label switch-label-off">Select these</label>
+         <input type="radio" class="switch-input" name="selection-type" value="EXCEPT_THESE" id="except-these">
+         <label for="except-these" class="switch-label switch-label-on">Except these</label>
+         <span class="switch-selection"></span>
+     </div>
     </aside>
 
     <!-- d3 + utils -->

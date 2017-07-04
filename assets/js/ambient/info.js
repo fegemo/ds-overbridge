@@ -28,7 +28,7 @@ function info() {
       by: 'south',
       distance: 0
     }))
-    .call(d3.kodama.tooltip())
+    .call(d3.kodama.tooltip());
 
 }
 

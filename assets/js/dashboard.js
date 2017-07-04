@@ -22,6 +22,15 @@ function dashboard() {
     species: null,
     starships: null
   };
+  const SelectionTypes = {
+    SELECT_THESE: Symbol('SELECT_THESE'),
+    EXCEPT_THESE: Symbol('EXCEPT_THESE')
+  }
+  let planetSelectionType = SelectionTypes.SELECT_THESE;
+  let selectionType = null,
+    action = null;
+  let brushedMap = null;
+  let currentlyBrushedPlanets = [];
 
   build.mapFiles = value => {
     if (typeof value === 'undefined') {
@@ -41,6 +50,15 @@ function dashboard() {
     }
   };
 
+  build.actionBar = value => {
+    if (typeof value === 'undefined') {
+      return {action, selectionType};
+    } else {
+      [action, selectionType] = [value.action, value.selectionType];
+      return build;
+    }
+  };
+
   function build(selection) {
     selection.each((_, i, nodes) => {
       let dashboardEl = d3.select(nodes[i]);
@@ -48,7 +66,6 @@ function dashboard() {
       //  0. create an event dispatcher ('planetschange' when users selects planets)
       // dipatching events: https://bl.ocks.org/mbostock/5872848
       let dispatch = d3.dispatch('dataready', 'planetschange');
-
 
       // 1. fetch the data
       let filesQueue = d3.queue();
@@ -171,9 +188,23 @@ function dashboard() {
             }])
           .width(dashboardEl.node().getClientRects()[0].width)
           .height(dashboardEl.node().getClientRects()[0].height)
-          .onBrushEnd(selected => {
-            dispatch.call('planetschange', null, selected);
-          });
+          .onBrushEnd((brushedMap = brushed => {
+                let selected = null;
+                switch (planetSelectionType) {
+                  case SelectionTypes.SELECT_THESE:
+                    // do nothing
+                    selected = brushed.slice();
+                    break;
+                  case SelectionTypes.EXCEPT_THESE:
+                    // turn 'selected' into the difference of all planets - brushed
+                    selected = moviesData.planetsInfo.slice().filter(pi => brushed.indexOf(pi) === -1);
+                    break;
+                }
+                dispatch.call('planetschange', null, selected);
+                currentlyBrushedPlanets = brushed;
+                d3.select(action).classed('showing', brushed.length > 0);
+              })
+            && brushedMap);
 
         dashboardEl.select('#map').call(visualizations.map);
 
@@ -392,6 +423,17 @@ function dashboard() {
           visualizations.terrain.data(terrainsFrequency);
         });
 
+        // 5. action bar stuff
+        d3.selectAll(selectionType).on('change', () => {
+          // changes the selection type (show info from these planets, or
+          // all of them except these)
+          planetSelectionType = SelectionTypes[
+            d3.select(`${selectionType}:checked`).attr('value')];
+          brushedMap(currentlyBrushedPlanets);
+        });
+
+        // 6. other
+
       });
 
 
@@ -415,4 +457,8 @@ d3.select('#dashboard')
           .map(prependWith('data/'))
           .map(appendWith('.json'))
         )
+      .actionBar({
+        action: '#action-bar',
+        selectionType: '#selection-type-switch input'
+      })
     );
