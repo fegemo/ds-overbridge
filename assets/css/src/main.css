@@ -14,7 +14,7 @@ body {
   --hud-vertical-margin: 1em;
   --hud-chart-height: 205px;
   --action-bar-height: 4em;
-  --action-bar-width: 10em;
+  --action-bar-width: 250px;
   --cover-page: {
     position: absolute;
     top: 0;
