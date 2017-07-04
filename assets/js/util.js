@@ -38,3 +38,18 @@ var countBy = (list, iteratee) =>
     group[iteratee(current)] = (group[iteratee(current)] + 1) || 1;
     return group;
   }, {})
+
+
+var throttle = (callback, limit) => {
+  let wait = false;
+  return function() {
+    if (!wait) {
+
+      callback.apply(null, arguments);
+      wait = true;
+      setTimeout(() => {
+        wait = false;
+      }, limit);
+    }
+  }
+}
