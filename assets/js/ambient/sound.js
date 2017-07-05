@@ -60,9 +60,9 @@ function RoomEffectsSample(inputs) {
 
   // Load all of the needed impulse responses and the actual sample.
   let loader = new BufferLoader(context, [
-    '../assets/audio/control-room-ambient.mp3',
-    '../assets/audio/telephone.wav',
-    '../assets/audio/spring.wav'
+    'assets/audio/control-room-ambient.mp3',
+    'assets/audio/telephone.wav',
+    'assets/audio/spring.wav'
   ], onLoaded);
 
   function onLoaded(buffers) {
